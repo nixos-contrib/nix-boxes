@@ -39,6 +39,36 @@ Vagrant.configure("2") do |config|
 end
 ```
 
+## GPU and graphics
+
+The boxes are headless and don't enable 3D acceleration, so they stay small.
+VMware Fusion and Parallels Desktop can both give the guest a virtual GPU; to
+use one, turn it on per VM in your `Vagrantfile` and add a graphics stack to the
+guest.
+
+> [!NOTE]
+> These settings are untested. Check them against your VMware Fusion or
+> Parallels Desktop version.
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.provider "vmware_desktop" do |v|
+    v.gui = true
+    v.vmx["mks.enable3d"] = "TRUE"
+  end
+
+  config.vm.provider "parallels" do |prl|
+    # See `prlctl set --help` for the 3D options of your version.
+    prl.customize ["set", :id, "--3d-accelerate", "highest"]
+  end
+end
+```
+
+In the guest, enable graphics support with `hardware.graphics.enable = true;` and
+install the desktop or application that needs it, in your own configuration. If
+you want a ready-made graphics box, open an issue: it would be a separate
+variant, so the base boxes stay headless.
+
 ## What's in the boxes
 
 - NixOS 26.05 with flakes enabled, plus `git` and `vim`
