@@ -61,11 +61,6 @@ in
   # Fusion exposes the disk over NVMe.
   boot.initrd.availableKernelModules = [ "nvme" ];
 
-  # The disk is sparse, so its size costs little in the box, but a system built with a flake needs
-  # far more room than the "auto" size, which fits only the installed system. The root partition
-  # grows to fill the disk on first boot.
-  virtualisation.diskSize = lib.mkDefault (40 * 1024);
-
   # Package the VMDK as a Vagrant box for the vmware_desktop provider:
   # https://developer.hashicorp.com/vagrant/docs/providers/vmware/boxes
   image.extension = lib.mkForce "box";

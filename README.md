@@ -76,8 +76,8 @@ variant, so the base boxes stay headless.
 - A `vagrant` user with the Vagrant insecure key (which Vagrant replaces on first
   `vagrant up`) and passwordless `sudo`, plus the packages Vagrant relies on
 - VMware Fusion: UEFI boot, `open-vm-tools`, the PCIe root ports that Fusion
-  needs to attach any device, and a 40 GiB sparse disk with a root partition
-  that grows to fill it on first boot
+  needs to attach any device, and a root partition that grows to fill the disk
+  on first boot
 
 The `vagrant` user has the well-known password `vagrant`, and the firewall is
 off so forwarded ports and services in the VM just work. These boxes are meant
