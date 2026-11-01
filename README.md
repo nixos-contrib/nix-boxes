@@ -47,6 +47,38 @@ Vagrant.configure("2") do |config|
 end
 ```
 
+## Parallels Desktop
+
+The `parallels` box is for the `parallels` provider, built for `aarch64-linux`
+(Parallels Desktop on Apple Silicon). You need Parallels Desktop Pro or Business
+and the [vagrant-parallels](https://parallels.github.io/vagrant-parallels/docs/)
+plugin (`vagrant plugin install vagrant-parallels`). Download the box from the
+release and add it:
+
+```sh
+curl -fLO https://github.com/nixos-contrib/nix-boxes/releases/download/<tag>/nixos-parallels-aarch64-linux.box
+vagrant box add nixos-parallels nixos-parallels-aarch64-linux.box
+```
+
+Then use the box in a `Vagrantfile`:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "nixos-parallels"
+  config.vm.provider "parallels" do |prl|
+    prl.memory = 4096
+    prl.cpus = 4
+  end
+end
+```
+
+Parallels Desktop can't run in CI, so the box is assembled by hand rather than
+exported from a VM: [scripts/raw-to-parallels-box.sh](scripts/raw-to-parallels-box.sh)
+converts the NixOS disk into a Parallels disk and writes the VM definition from
+[a template](templates/parallels/box-aarch64.pvs) cut from a box that Parallels
+Desktop produced. Parallels Tools are installed from nixpkgs, which is unfree;
+only `prl-tools` is allowed.
+
 ## GPU and graphics
 
 The boxes are headless and don't enable 3D acceleration, so they stay small.
@@ -94,7 +126,9 @@ variant, so the base boxes stay headless.
   grows to fill it on first boot. The box is that big up front because a linked
   clone inherits the size of the box's disk and can't be grown afterwards; set
   `vmware.boxDiskSizeGiB` to change it
-- Vagrant defaults for NixOS, in the `Vagrantfile` of the box: the `nixos` guest
+- Parallels Desktop: UEFI boot on Arm, Parallels Tools, and a root partition
+  that grows to fill the disk on first boot
+- Vagrant defaults for NixOS, in the `Vagrantfile` of each box: the `nixos` guest
   (the VMware plugin needs its `configure_networks`), and no writes to
   `/etc/fstab`, which is read-only here. The box also has no terminal-title
   escape in `/etc/bash_logout`, which Vagrant would read as command output
@@ -132,6 +166,7 @@ system:
 
 ```sh
 nix build .#packages.aarch64-linux.vmware
+nix build .#packages.aarch64-linux.parallels
 nix build .#vmware
 ```
 
