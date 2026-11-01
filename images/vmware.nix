@@ -15,9 +15,19 @@ let
   # The disk must be named in the .vmx; Vagrant imports the first *.vmx.
   vmdk = "disk.vmdk";
 
+  # Merged under the Vagrantfile of the user, so a minimal one still works.
+  #
+  # The guest is nixos, not the generic linux: the VMware plugin calls
+  # configure_networks on every start, even with nothing to configure, and only
+  # the distribution guests have it. The nixos guest only uploads a file to
+  # /etc/nixos, it does not rebuild the system.
+  #
+  # /etc/fstab is a link into the store on NixOS, so it is read-only, and Vagrant
+  # would write its empty #VAGRANT-BEGIN block to it ("Read-only file system").
   vagrantfile = pkgs.writeText "Vagrantfile" ''
     Vagrant.configure("2") do |config|
-      config.vm.guest = :linux
+      config.vm.guest = :nixos
+      config.vm.allow_fstab_modification = false
     end
   '';
 
