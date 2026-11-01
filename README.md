@@ -82,6 +82,11 @@ variant, so the base boxes stay headless.
   (the VMware plugin needs its `configure_networks`), and no writes to
   `/etc/fstab`, which is read-only here. The box also has no terminal-title
   escape in `/etc/bash_logout`, which Vagrant would read as command output
+- Not applied: `config.vm.hostname` and `config.vm.network "private_network"`.
+  Vagrant's `nixos` guest only uploads `/etc/nixos/vagrant-hostname.nix` and
+  `/etc/nixos/vagrant-network.nix`, which nothing in the box imports, so `vagrant up`
+  succeeds without setting the hostname or the address. Set them in your own
+  NixOS configuration instead
 
 The `vagrant` user has the well-known password `vagrant`, and the firewall is
 off so forwarded ports and services in the VM just work. These boxes are meant
