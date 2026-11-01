@@ -6,6 +6,7 @@
   ...
 }:
 let
+  cfg = config.vmware;
   inherit (config.image) baseName filePath;
   inherit (pkgs.stdenv.hostPlatform) isAarch64;
 
@@ -68,36 +69,60 @@ in
   # Provides the UEFI VMDK builder plus open-vm-tools.
   imports = [ "${modulesPath}/virtualisation/vmware-image.nix" ];
 
-  # Fusion exposes the disk over NVMe.
-  boot.initrd.availableKernelModules = [ "nvme" ];
+  options.vmware.boxDiskSizeGiB = lib.mkOption {
+    type = lib.types.ints.positive;
+    default = 40;
+    description = ''
+      Virtual size of the box's disk in GiB. The disk is sparse, so it only
+      takes the space the system uses. A linked clone inherits the size of
+      the box's disk and can't be grown afterwards, so the box has to be big
+      enough up front. The first boot grows the root partition and its
+      filesystem to fill it.
+    '';
+  };
 
-  # Package the VMDK as a Vagrant box for the vmware_desktop provider:
-  # https://developer.hashicorp.com/vagrant/docs/providers/vmware/boxes
-  image.extension = lib.mkForce "box";
-  system.nixos.tags = [ "vagrant" ];
-  system.build.image = lib.mkForce (
-    pkgs.runCommand "vagrant-vmware-box"
-      {
-        nativeBuildInputs = [
-          pkgs.gnutar
-          pkgs.gzip
-        ];
-      }
-      ''
-        mkdir workdir $out
-        cd workdir
+  config = {
+    # Fusion exposes the disk over NVMe.
+    boot.initrd.availableKernelModules = [ "nvme" ];
 
-        # The files of the store are read-only, and so would be the ones of the box. Fusion has to
-        # write the .vmx and the disk to snapshot and clone it, so the copies keep no mode.
-        echo '{"provider":"vmware_desktop"}' > metadata.json
-        cp --no-preserve=mode ${vagrantfile} Vagrantfile
-        cp --no-preserve=mode ${vmx} box.vmx
+    # Package the VMDK as a Vagrant box for the vmware_desktop provider:
+    # https://developer.hashicorp.com/vagrant/docs/providers/vmware/boxes
+    image.extension = lib.mkForce "box";
+    system.nixos.tags = [ "vagrant" ];
+    system.build.image = lib.mkForce (
+      pkgs.runCommand "vagrant-vmware-box"
+        {
+          nativeBuildInputs = [
+            pkgs.gnutar
+            pkgs.gzip
+            pkgs.qemu-utils
+          ];
+        }
+        ''
+          mkdir workdir $out
+          cd workdir
 
-        # The VMDK is named after image.fileName; the output also has a
-        # nix-support directory, so don't glob.
-        cp --no-preserve=mode ${config.system.build.vmwareImage}/${config.image.fileName} ${vmdk}
+          # The files of the store are read-only, and so would be the ones of the box. Fusion has to
+          # write the .vmx and the disk to snapshot and clone it, so the copies keep no mode.
+          echo '{"provider":"vmware_desktop"}' > metadata.json
+          cp --no-preserve=mode ${vagrantfile} Vagrantfile
+          cp --no-preserve=mode ${vmx} box.vmx
 
-        tar --owner=0 --group=0 --sort=name --numeric-owner -czf $out/${filePath} .
-      ''
-  );
+          # The disk is as big as the installed system. Building a bigger one
+          # makes the image build run out of memory, so grow it afterwards:
+          # qemu-img can't resize a VMDK, so go through a sparse raw image.
+          # The VMDK is named after image.fileName; the output also has a
+          # nix-support directory, so don't glob.
+          qemu-img convert -f vmdk -O raw \
+            ${config.system.build.vmwareImage}/${config.image.fileName} $TMPDIR/disk.raw
+          truncate -s ${toString cfg.boxDiskSizeGiB}G $TMPDIR/disk.raw
+          qemu-img convert -f raw -O vmdk \
+            -o subformat=${cfg.vmSubformat},compat6=${if cfg.vmCompat6 then "on" else "off"} \
+            $TMPDIR/disk.raw ${vmdk}
+          rm $TMPDIR/disk.raw
+
+          tar --owner=0 --group=0 --sort=name --numeric-owner -czf $out/${filePath} .
+        ''
+    );
+  };
 }
