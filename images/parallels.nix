@@ -26,6 +26,11 @@ in
   image.format = "raw";
   image.efiSupport = true;
 
+  # Some VM firmware only supports console mode 0, and systemd-boot otherwise
+  # fails to boot with "error switching console mode". It is the firmware's
+  # default mode, so it's safe everywhere.
+  boot.loader.systemd-boot.consoleMode = lib.mkDefault "0";
+
   # Parallels Tools: shared folders, time sync and the guest agent. The package
   # is unfree, so allow just it.
   hardware.parallels.enable = true;
