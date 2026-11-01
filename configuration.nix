@@ -31,7 +31,7 @@
   # Vagrant takes it as the last output of the command: mktemp gives "]0;" instead
   # of a path, and the key types it reads from sshd -T get a line of one word,
   # which fails with "odd number of arguments for Hash". Nothing reads a title here.
-  programs.bash.logout = "";
+  programs.bash.logout = lib.mkDefault "";
 
   # Keep the boxes small.
   documentation.man.enable = false;
