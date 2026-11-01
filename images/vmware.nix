@@ -68,8 +68,9 @@ in
         cp ${vagrantfile} Vagrantfile
         cp ${vmx} box.vmx
 
-        # The only file in the VMDK build output (named after image.fileName).
-        cp ${config.system.build.vmwareImage}/* ${vmdk}
+        # The VMDK is named after image.fileName; the output also has a
+        # nix-support directory, so don't glob.
+        cp ${config.system.build.vmwareImage}/${config.image.fileName} ${vmdk}
 
         tar --owner=0 --group=0 --sort=name --numeric-owner -czf $out/${filePath} .
       ''
