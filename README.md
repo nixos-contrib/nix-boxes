@@ -78,6 +78,10 @@ variant, so the base boxes stay headless.
 - VMware Fusion: UEFI boot, `open-vm-tools`, the PCIe root ports that Fusion
   needs to attach any device, and a root partition that grows to fill the disk
   on first boot
+- Vagrant defaults for NixOS, in the `Vagrantfile` of the box: the `nixos` guest
+  (the VMware plugin needs its `configure_networks`), and no writes to
+  `/etc/fstab`, which is read-only here. The box also has no terminal-title
+  escape in `/etc/bash_logout`, which Vagrant would read as command output
 
 The `vagrant` user has the well-known password `vagrant`, and the firewall is
 off so forwarded ports and services in the VM just work. These boxes are meant
