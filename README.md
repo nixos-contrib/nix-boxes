@@ -76,8 +76,10 @@ variant, so the base boxes stay headless.
 - A `vagrant` user with the Vagrant insecure key (which Vagrant replaces on first
   `vagrant up`) and passwordless `sudo`, plus the packages Vagrant relies on
 - VMware Fusion: UEFI boot, `open-vm-tools`, the PCIe root ports that Fusion
-  needs to attach any device, and a root partition that grows to fill the disk
-  on first boot
+  needs to attach any device, and a 40 GiB sparse disk whose root partition
+  grows to fill it on first boot. The box is that big up front because a linked
+  clone inherits the size of the box's disk and can't be grown afterwards; set
+  `vmware.boxDiskSizeGiB` to change it
 - Vagrant defaults for NixOS, in the `Vagrantfile` of the box: the `nixos` guest
   (the VMware plugin needs its `configure_networks`), and no writes to
   `/etc/fstab`, which is read-only here. The box also has no terminal-title
