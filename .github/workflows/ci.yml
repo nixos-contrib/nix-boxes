@@ -93,6 +93,11 @@ jobs:
       contents: write
     timeout-minutes: 15
     steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts
+
       - name: Download images
         uses: actions/download-artifact@v8
         with:
@@ -105,6 +110,14 @@ jobs:
         run: |
           sha256sum -- nixos-* > SHA256SUMS
           cat SHA256SUMS
+
+      # Vagrant updates only the boxes it added from a catalog like this one.
+      - name: Write box catalogs
+        env:
+          TAG: ${{ needs.release.outputs.tag_name }}
+        run: |
+          .github/scripts/catalog.sh "$TAG" dist
+          jq . dist/*.json
 
       - name: Attach images to release
         env:

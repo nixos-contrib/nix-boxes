@@ -19,19 +19,27 @@ The `vmware` box is for the `vmware_desktop` provider, built for `aarch64-linux`
 (Fusion on Apple Silicon) and `x86_64-linux` (Fusion on Intel). You need VMware
 Fusion and the
 [Vagrant VMware utility and plugin](https://developer.hashicorp.com/vagrant/docs/providers/vmware/installation).
-Download the box from the release and add it:
+Add the box from the catalog of the latest release. Vagrant picks the box for
+your CPU (Apple Silicon or Intel) and checks its checksum:
 
 ```sh
-curl -fLO https://github.com/nixos-contrib/nix-boxes/releases/download/<tag>/nixos-vmware-aarch64-linux.box
-vagrant box add nixos-vmware nixos-vmware-aarch64-linux.box
+vagrant box add nixos-vmware https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-vmware.json
 ```
 
-Each release also has a `SHA256SUMS` file for checking the download. Then use
-the box in a `Vagrantfile` (use `nixos-vmware-x86_64-linux.box` on Intel):
+Because it was added from a catalog, `vagrant box outdated` and
+`vagrant box update` work for it. A new version only changes what new VMs start
+from, a VM that exists keeps its disk. Or let Vagrant add the box on the first
+`vagrant up`, with `config.vm.box_url` in the `Vagrantfile` below.
+
+Each release also has the boxes themselves (`nixos-vmware-aarch64-linux.box` and
+`nixos-vmware-x86_64-linux.box`) and a `SHA256SUMS` file, to add one by hand with
+`vagrant box add nixos-vmware <file>`, which can't be updated. Then use the box
+in a `Vagrantfile`:
 
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "nixos-vmware"
+  config.vm.box_url = "https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-vmware.json"
   config.vm.provider "vmware_desktop" do |v|
     v.vmx["memsize"] = "4096"
     v.vmx["numvcpus"] = "4"
