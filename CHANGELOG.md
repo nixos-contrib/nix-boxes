@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/nixos-contrib/nix-boxes/compare/v0.2.0...v0.3.0) (2026-11-01)
+
+
+### Features
+
+* publish a Vagrant catalog of each box, so that vagrant box update works ([bad5c5b](https://github.com/nixos-contrib/nix-boxes/commit/bad5c5b49d88e808513b645bff047d40a177440a))
+* **vmware:** grow the box disk to 40 GiB after the build ([7fb74dd](https://github.com/nixos-contrib/nix-boxes/commit/7fb74dda957c0267ab3d66823f401e5a9bfe5ba7))
+
+
+### Bug Fixes
+
+* make a first vagrant up of the VMware box finish on NixOS ([#9](https://github.com/nixos-contrib/nix-boxes/issues/9)) ([ee81698](https://github.com/nixos-contrib/nix-boxes/commit/ee81698319f5747da0727edf6ce08682b863da24))
+* make the VMware box start and clone on Fusion ([#6](https://github.com/nixos-contrib/nix-boxes/issues/6)) ([085ebd6](https://github.com/nixos-contrib/nix-boxes/commit/085ebd6baeae145ca9ea6b32af7dd7a6d543cc3e))
+
 ## [0.2.0](https://github.com/nixos-contrib/nix-boxes/compare/v0.1.0...v0.2.0) (2026-11-01)
 
 
