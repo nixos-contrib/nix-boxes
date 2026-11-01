@@ -1,5 +1,10 @@
 # Shared by every box in ./images.
-{ modulesPath, pkgs, ... }:
+{
+  lib,
+  modulesPath,
+  pkgs,
+  ...
+}:
 {
   # Provides the vagrant user, its insecure SSH key, passwordless sudo and the
   # packages Vagrant relies on, as required of a base box:
@@ -15,6 +20,11 @@
     git
     vim
   ];
+
+  # These are local development VMs on Vagrant's NAT network, where forwarded
+  # ports and services in the VM should just work. Turn it back on if you use
+  # bridged networking (public_network).
+  networking.firewall.enable = lib.mkDefault false;
 
   # Keep the boxes small.
   documentation.man.enable = false;

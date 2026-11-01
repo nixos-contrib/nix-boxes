@@ -48,8 +48,11 @@ end
 - VMware Fusion: UEFI boot, `open-vm-tools`, and a root partition that grows to
   fill the disk on first boot
 
-The `vagrant` user has the well-known password `vagrant`. These boxes are meant
-for local development VMs, not for exposure to untrusted networks.
+The `vagrant` user has the well-known password `vagrant`, and the firewall is
+off so forwarded ports and services in the VM just work. These boxes are meant
+for local development VMs on Vagrant's default NAT network, not for exposure to
+untrusted networks: with bridged networking (`public_network`), set
+`networking.firewall.enable = true` in your own configuration.
 
 Inside the VM, manage the system with your own flake, for example:
 
