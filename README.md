@@ -55,14 +55,19 @@ use one, turn it on per VM in your `Vagrantfile` and add a graphics stack to the
 guest.
 
 > [!NOTE]
-> These settings are untested. Check them against your VMware Fusion or
-> Parallels Desktop version.
+> The Parallels setting is untested. Check it against your Parallels Desktop
+> version.
 
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.provider "vmware_desktop" do |v|
     v.gui = true
     v.vmx["mks.enable3d"] = "TRUE"
+
+    # Fusion gives the GPU 256 MB by default. A video on a large screen
+    # overflows it (`vmwgfx: mob memory overflow` in vmware.log), drops frames
+    # and loses the sync of the sound.
+    v.vmx["svga.graphicsMemoryKB"] = "2097152"
   end
 
   config.vm.provider "parallels" do |prl|
@@ -84,7 +89,8 @@ variant, so the base boxes stay headless.
 - A `vagrant` user with the Vagrant insecure key (which Vagrant replaces on first
   `vagrant up`) and passwordless `sudo`, plus the packages Vagrant relies on
 - VMware Fusion: UEFI boot, `open-vm-tools`, the PCIe root ports that Fusion
-  needs to attach any device, and a 40 GiB sparse disk whose root partition
+  needs to attach any device, a USB controller with a virtual keyboard and mouse
+  for the GUI window, and a 40 GiB sparse disk whose root partition
   grows to fill it on first boot. The box is that big up front because a linked
   clone inherits the size of the box's disk and can't be grown afterwards; set
   `vmware.boxDiskSizeGiB` to change it
