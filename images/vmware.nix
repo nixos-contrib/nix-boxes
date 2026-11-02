@@ -32,6 +32,8 @@ let
     end
   '';
 
+  # The USB controller gives the GUI window of Fusion a keyboard and a mouse to
+  # send to; without one the guest has no input device at all.
   vmx = pkgs.writeText "box.vmx" ''
     .encoding = "UTF-8"
     config.version = "8"
@@ -63,6 +65,10 @@ let
     ethernet0.addressType = "generated"
     ethernet0.startConnected = "TRUE"
     tools.syncTime = "TRUE"
+    usb.present = "TRUE"
+    usb_xhci.present = "TRUE"
+    mouse.vusb.enable = "TRUE"
+    keyboard.vusb.enable = "TRUE"
   '';
 in
 {
