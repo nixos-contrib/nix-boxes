@@ -52,19 +52,26 @@ end
 The `parallels` box is for the `parallels` provider, built for `aarch64-linux`
 (Parallels Desktop on Apple Silicon). You need Parallels Desktop Pro or Business
 and the [vagrant-parallels](https://parallels.github.io/vagrant-parallels/docs/)
-plugin (`vagrant plugin install vagrant-parallels`). Download the box from the
-release and add it:
+plugin (`vagrant plugin install vagrant-parallels`). Add the box from the catalog
+of the latest release, and Vagrant checks its checksum:
 
 ```sh
-curl -fLO https://github.com/nixos-contrib/nix-boxes/releases/download/<tag>/nixos-parallels-aarch64-linux.box
-vagrant box add nixos-parallels nixos-parallels-aarch64-linux.box
+vagrant box add nixos-parallels https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-parallels.json
 ```
 
-Then use the box in a `Vagrantfile`:
+Because it was added from a catalog, `vagrant box outdated` and
+`vagrant box update` work for it. A new version only changes what new VMs start
+from, a VM that exists keeps its disk. Or let Vagrant add the box on the first
+`vagrant up`, with `config.vm.box_url` in the `Vagrantfile` below.
+
+Each release also has the box itself (`nixos-parallels-aarch64-linux.box`) and a
+`SHA256SUMS` file, to add it by hand with `vagrant box add nixos-parallels <file>`,
+which can't be updated. Then use the box in a `Vagrantfile`:
 
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "nixos-parallels"
+  config.vm.box_url = "https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-parallels.json"
   config.vm.provider "parallels" do |prl|
     prl.memory = 4096
     prl.cpus = 4
