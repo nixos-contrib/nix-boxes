@@ -8,7 +8,7 @@
 #   (DiskDescriptor.xml plus one .hds with the fixed base image ID), converted
 #   with qemu-img and rewritten into the "WithoutFreeSpace" layout Parallels
 #   Desktop itself writes (qemu-img writes the "WithouFreSpacExt" one)
-# - Vagrantfile, an empty file
+# - Vagrantfile, with the Vagrant defaults for NixOS
 # - metadata.json, with the provider and architecture
 #
 # Parallels Desktop creates the rest (NVRAM.dat, VmInfo.pvi) on first boot.
@@ -163,7 +163,17 @@ if grep -nE '@(VM_UUID|VM_NAME|CREATION_DATE|TOOLS_VERSION|HDD_UUID|DISK_SIZE_MB
   exit 1
 fi
 
-: >"$work/Vagrantfile"
+# Merged under the Vagrantfile of the user, as in the VMware box. The guest is
+# nixos, not the generic linux, which is the distribution guest that has the
+# capabilities Vagrant calls on a start, and /etc/fstab is a link into the store
+# on NixOS, so it is read-only and Vagrant would fail to write its empty
+# #VAGRANT-BEGIN block to it ("Read-only file system").
+cat >"$work/Vagrantfile" <<'EOF'
+Vagrant.configure("2") do |config|
+  config.vm.guest = :nixos
+  config.vm.allow_fstab_modification = false
+end
+EOF
 echo '{"architecture":"arm64","provider":"parallels"}' >"$work/metadata.json"
 
 # Parallels disks aren't compressed, hence the gzip.
