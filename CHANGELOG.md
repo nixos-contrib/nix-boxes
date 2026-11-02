@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/nixos-contrib/nix-boxes/compare/v0.4.0...v0.4.1) (2026-11-02)
+
+
+### Bug Fixes
+
+* serve the catalogs from GitHub Pages, Vagrant cannot read them from a release ([#14](https://github.com/nixos-contrib/nix-boxes/issues/14)) ([befd296](https://github.com/nixos-contrib/nix-boxes/commit/befd296d78725663dd68f75fc8d6ac2232c8b3b6))
+
 ## [0.4.0](https://github.com/nixos-contrib/nix-boxes/compare/v0.3.0...v0.4.0) (2026-11-02)
 
 
