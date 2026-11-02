@@ -7,8 +7,10 @@
 # the catalog is also where Vagrant reads the checksum of each box. The boxes are
 # named nixos-<variant>-<system>.box and every variant gets nixos-<variant>.json,
 # which lists the version of the tag and a box for each system. The name has no
-# version in it, so releases/latest/download/nixos-<variant>.json is always the
-# newest release.
+# version in it, so https://nixos-contrib.github.io/nix-boxes/nixos-<variant>.json
+# is always the newest release: the pages workflow serves the catalogs from the
+# latest release, as GitHub sends the assets of a release as octet-stream and
+# Vagrant takes a URL for a catalog only when the server says application/json.
 # https://developer.hashicorp.com/vagrant/docs/boxes/format#box-versioning
 set -euo pipefail
 
