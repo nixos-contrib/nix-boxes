@@ -1,0 +1,56 @@
+name: Pages
+
+# Vagrant takes a URL for a catalog only when the server says application/json,
+# and GitHub sends the assets of a release as application/octet-stream, so
+# `vagrant box add <catalog>` downloads the catalog as if it were a box and fails
+# to unpack it. GitHub Pages sends .json as application/json, so the catalogs of
+# the latest release are served from here, as
+# https://nixos-contrib.github.io/nix-boxes/nixos-<variant>.json. The boxes stay
+# on the release: Vagrant does not look at their content type.
+#
+# The catalogs are written and attached to the release by the publish job of CI.
+# This runs when CI has finished on main, and by hand to publish the ones of a
+# release that is already out.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 10
+    steps:
+      - name: Download the catalogs of the latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download --repo "$GITHUB_REPOSITORY" --pattern 'nixos-*.json' --dir site
+          ls -l site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload the catalogs
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

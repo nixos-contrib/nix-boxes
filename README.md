@@ -23,13 +23,18 @@ Add the box from the catalog of the latest release. Vagrant picks the box for
 your CPU (Apple Silicon or Intel) and checks its checksum:
 
 ```sh
-vagrant box add nixos-vmware https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-vmware.json
+vagrant box add nixos-vmware https://nixos-contrib.github.io/nix-boxes/nixos-vmware.json
 ```
 
 Because it was added from a catalog, `vagrant box outdated` and
 `vagrant box update` work for it. A new version only changes what new VMs start
 from, a VM that exists keeps its disk. Or let Vagrant add the box on the first
 `vagrant up`, with `config.vm.box_url` in the `Vagrantfile` below.
+
+The catalogs are on GitHub Pages and not on the release because Vagrant takes a
+URL for a catalog only when the server says `application/json`, and GitHub sends
+the assets of a release as `application/octet-stream`: Vagrant would download the
+catalog as if it were a box and fail to unpack it.
 
 Each release also has the boxes themselves (`nixos-vmware-aarch64-linux.box` and
 `nixos-vmware-x86_64-linux.box`) and a `SHA256SUMS` file, to add one by hand with
@@ -39,7 +44,7 @@ in a `Vagrantfile`:
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "nixos-vmware"
-  config.vm.box_url = "https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-vmware.json"
+  config.vm.box_url = "https://nixos-contrib.github.io/nix-boxes/nixos-vmware.json"
   config.vm.provider "vmware_desktop" do |v|
     v.vmx["memsize"] = "4096"
     v.vmx["numvcpus"] = "4"
@@ -56,7 +61,7 @@ plugin (`vagrant plugin install vagrant-parallels`). Add the box from the catalo
 of the latest release, and Vagrant checks its checksum:
 
 ```sh
-vagrant box add nixos-parallels https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-parallels.json
+vagrant box add nixos-parallels https://nixos-contrib.github.io/nix-boxes/nixos-parallels.json
 ```
 
 Because it was added from a catalog, `vagrant box outdated` and
@@ -71,7 +76,7 @@ which can't be updated. Then use the box in a `Vagrantfile`:
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "nixos-parallels"
-  config.vm.box_url = "https://github.com/nixos-contrib/nix-boxes/releases/latest/download/nixos-parallels.json"
+  config.vm.box_url = "https://nixos-contrib.github.io/nix-boxes/nixos-parallels.json"
   config.vm.provider "parallels" do |prl|
     prl.memory = 4096
     prl.cpus = 4
