@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/nixos-contrib/nix-boxes/compare/v0.3.0...v0.4.0) (2026-11-02)
+
+
+### Features
+
+* add Parallels Desktop Vagrant box ([#2](https://github.com/nixos-contrib/nix-boxes/issues/2)) ([5e41183](https://github.com/nixos-contrib/nix-boxes/commit/5e411838a20ca200b46574843cacdf458e0a8c7e))
+
+
+### Bug Fixes
+
+* **vmware:** a USB keyboard and mouse for the GUI window ([a5a8c53](https://github.com/nixos-contrib/nix-boxes/commit/a5a8c533428fa03c122c8ed78cc613226541757a))
+
 ## [0.3.0](https://github.com/nixos-contrib/nix-boxes/compare/v0.2.0...v0.3.0) (2026-11-01)
 
 
