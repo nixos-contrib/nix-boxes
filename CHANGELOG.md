@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/nixos-contrib/nix-boxes/compare/v0.4.1...v0.4.2) (2026-11-07)
+
+
+### Bug Fixes
+
+* **ci:** merge with the App token so main gets its CI run ([#17](https://github.com/nixos-contrib/nix-boxes/issues/17)) ([ed56804](https://github.com/nixos-contrib/nix-boxes/commit/ed56804b72686010136e04ce28316a95c66fcddc))
+
 ## [0.4.1](https://github.com/nixos-contrib/nix-boxes/compare/v0.4.0...v0.4.1) (2026-11-02)
 
 
