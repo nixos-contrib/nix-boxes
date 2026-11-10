@@ -8,8 +8,12 @@
     let
       inherit (nixpkgs) lib;
 
-      # Every ./images/<variant>.nix becomes a box named after the variant.
-      variants = map (lib.removeSuffix ".nix") (builtins.attrNames (builtins.readDir ./images));
+      # Every ./images/<variant>.nix, or ./images/<variant>/default.nix, becomes
+      # a box named after the variant.
+      modules = lib.mapAttrs' (
+        name: _: lib.nameValuePair (lib.removeSuffix ".nix" name) (./images + "/${name}")
+      ) (builtins.readDir ./images);
+      variants = builtins.attrNames modules;
 
       # Apple Silicon hosts run Arm guests, Intel hosts x86_64 guests. Variants
       # not listed here are built for both.
@@ -29,7 +33,7 @@
           inherit system;
           modules = [
             ./configuration.nix
-            ./images/${variant}.nix
+            modules.${variant}
             # Stable file name so the release asset URL is predictable.
             { image.baseName = "nixos-${variant}-${system}"; }
           ];

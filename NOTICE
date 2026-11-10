@@ -2,7 +2,7 @@ This project includes material adapted from AlmaLinux/cloud-images
 (https://github.com/AlmaLinux/cloud-images), used under the MIT License:
 
 - scripts/raw-to-parallels-box.sh, adapted from tools/raw-to-vagrant-parallels.sh
-- templates/parallels/box-aarch64.pvs, from tpl/vagrant/parallels/box-aarch64.pvs
+- images/parallels/box-aarch64.pvs, from tpl/vagrant/parallels/box-aarch64.pvs
 
 MIT License
 
