@@ -62,9 +62,9 @@ in
       }
       ''
         mkdir $out
-        bash ${../scripts/raw-to-parallels-box.sh} \
+        bash ${../../scripts/raw-to-parallels-box.sh} \
           ${rawImage}/${baseName}.img \
-          ${../templates/parallels/box-aarch64.pvs} \
+          ${./box-aarch64.pvs} \
           $out/${filePath} \
           ${baseName} \
           ${config.hardware.parallels.package.version}

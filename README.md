@@ -87,7 +87,7 @@ end
 Parallels Desktop can't run in CI, so the box is assembled by hand rather than
 exported from a VM: [scripts/raw-to-parallels-box.sh](scripts/raw-to-parallels-box.sh)
 converts the NixOS disk into a Parallels disk and writes the VM definition from
-[a template](templates/parallels/box-aarch64.pvs) cut from a box that Parallels
+[a template](images/parallels/box-aarch64.pvs) cut from a box that Parallels
 Desktop produced. Parallels Tools are installed from nixpkgs, which is unfree;
 only `prl-tools` is allowed.
 
