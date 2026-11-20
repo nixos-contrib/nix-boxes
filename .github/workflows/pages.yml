@@ -5,7 +5,7 @@ name: Pages
 # `vagrant box add <catalog>` downloads the catalog as if it were a box and fails
 # to unpack it. GitHub Pages sends .json as application/json, so the catalogs of
 # the latest release are served from here, as
-# https://nixos-contrib.github.io/nix-boxes/nixos-<variant>.json. The boxes stay
+# https://nixos-contrib.github.io/nixos-boxes/nixos-<variant>.json. The boxes stay
 # on the release: Vagrant does not look at their content type.
 #
 # The catalogs are written and attached to the release by the publish job of CI.

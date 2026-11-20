@@ -1,13 +1,13 @@
-# nix-boxes
+# nixos-boxes
 
-[![CI](https://github.com/nixos-contrib/nix-boxes/actions/workflows/ci.yml/badge.svg)](https://github.com/nixos-contrib/nix-boxes/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/nixos-contrib/nix-boxes)](https://github.com/nixos-contrib/nix-boxes/releases/latest)
+[![CI](https://github.com/nixos-contrib/nixos-boxes/actions/workflows/ci.yml/badge.svg)](https://github.com/nixos-contrib/nixos-boxes/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/nixos-contrib/nixos-boxes)](https://github.com/nixos-contrib/nixos-boxes/releases/latest)
 [![NixOS 26.05](https://img.shields.io/badge/NixOS-26.05-5277C3?logo=nixos&logoColor=white)](https://nixos.org)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Prebuilt NixOS [Vagrant boxes](https://developer.hashicorp.com/vagrant/docs/boxes/base),
 built with Nix. Every release ships the boxes as assets. For cloud images, see
-[nix-images](https://github.com/nixos-contrib/nix-images).
+[nixos-images](https://github.com/nixos-contrib/nixos-images).
 
 > [!WARNING]
 > This project is a work in progress and has not been tested yet. Boxes may be
@@ -23,7 +23,7 @@ Add the box from the catalog of the latest release. Vagrant picks the box for
 your CPU (Apple Silicon or Intel) and checks its checksum:
 
 ```sh
-vagrant box add nixos-vmware https://nixos-contrib.github.io/nix-boxes/nixos-vmware.json
+vagrant box add nixos-vmware https://nixos-contrib.github.io/nixos-boxes/nixos-vmware.json
 ```
 
 Because it was added from a catalog, `vagrant box outdated` and
@@ -44,7 +44,7 @@ in a `Vagrantfile`:
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "nixos-vmware"
-  config.vm.box_url = "https://nixos-contrib.github.io/nix-boxes/nixos-vmware.json"
+  config.vm.box_url = "https://nixos-contrib.github.io/nixos-boxes/nixos-vmware.json"
   config.vm.provider "vmware_desktop" do |v|
     v.vmx["memsize"] = "4096"
     v.vmx["numvcpus"] = "4"
@@ -61,7 +61,7 @@ plugin (`vagrant plugin install vagrant-parallels`). Add the box from the catalo
 of the latest release, and Vagrant checks its checksum:
 
 ```sh
-vagrant box add nixos-parallels https://nixos-contrib.github.io/nix-boxes/nixos-parallels.json
+vagrant box add nixos-parallels https://nixos-contrib.github.io/nixos-boxes/nixos-parallels.json
 ```
 
 Because it was added from a catalog, `vagrant box outdated` and
@@ -76,7 +76,7 @@ which can't be updated. Then use the box in a `Vagrantfile`:
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "nixos-parallels"
-  config.vm.box_url = "https://nixos-contrib.github.io/nix-boxes/nixos-parallels.json"
+  config.vm.box_url = "https://nixos-contrib.github.io/nixos-boxes/nixos-parallels.json"
   config.vm.provider "parallels" do |prl|
     prl.memory = 4096
     prl.cpus = 4

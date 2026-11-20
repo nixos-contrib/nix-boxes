@@ -7,7 +7,7 @@
 # the catalog is also where Vagrant reads the checksum of each box. The boxes are
 # named nixos-<variant>-<system>.box and every variant gets nixos-<variant>.json,
 # which lists the version of the tag and a box for each system. The name has no
-# version in it, so https://nixos-contrib.github.io/nix-boxes/nixos-<variant>.json
+# version in it, so https://nixos-contrib.github.io/nixos-boxes/nixos-<variant>.json
 # is always the newest release: the pages workflow serves the catalogs from the
 # latest release, as GitHub sends the assets of a release as octet-stream and
 # Vagrant takes a URL for a catalog only when the server says application/json.
@@ -16,7 +16,7 @@ set -euo pipefail
 
 tag="$1"
 dir="$2"
-repo="${GITHUB_REPOSITORY:-nixos-contrib/nix-boxes}"
+repo="${GITHUB_REPOSITORY:-nixos-contrib/nixos-boxes}"
 version="${tag#v}"
 
 cd "$dir"
@@ -67,7 +67,7 @@ for variant in $variants; do
     --argjson providers "$providers" \
     '{
       name: $name,
-      description: "NixOS box from nixos-contrib/nix-boxes",
+      description: "NixOS box from nixos-contrib/nixos-boxes",
       versions: [{ version: $version, providers: $providers }]
     }' > "nixos-$variant.json"
 
