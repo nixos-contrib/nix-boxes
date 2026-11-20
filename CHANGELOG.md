@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/nixos-contrib/nixos-boxes/compare/v0.4.2...v0.4.3) (2026-11-20)
+
+
+### Bug Fixes
+
+* **parallels:** Parallels Tools of the current Parallels Desktop, 27.1.0, in the box ([b8d1954](https://github.com/nixos-contrib/nixos-boxes/commit/b8d195440e241be430e7edfc11cf5a6d63a7e71e))
+
 ## [0.4.2](https://github.com/nixos-contrib/nix-boxes/compare/v0.4.1...v0.4.2) (2026-11-07)
 
 
