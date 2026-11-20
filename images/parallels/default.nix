@@ -32,8 +32,20 @@ in
   boot.loader.systemd-boot.consoleMode = lib.mkDefault "0";
 
   # Parallels Tools: shared folders, time sync and the guest agent. The package
-  # is unfree, so allow just it.
-  hardware.parallels.enable = true;
+  # is unfree, so allow just it. Parallels Desktop calls the tools of a different
+  # version outdated, and nixpkgs is behind it, so this is the package of nixpkgs
+  # with the version and the download of the current Parallels Desktop. Drop the
+  # override when nixpkgs has that version.
+  hardware.parallels = {
+    enable = true;
+    package = pkgs.prl-tools.overrideAttrs (finalAttrs: _: {
+      version = "27.1.0-58756";
+      src = pkgs.fetchurl {
+        url = "https://download.parallels.com/desktop/v${lib.versions.major finalAttrs.version}/${finalAttrs.version}/ParallelsDesktop-${finalAttrs.version}.dmg";
+        hash = "sha256-3sh18YutPqbpLgLNXIe5pr9gMGx2z6RnWe7/3RJq7Vc=";
+      };
+    });
+  };
   nixpkgs.config.allowUnfreePredicate = pkg: lib.getName pkg == "prl-tools";
 
   # The box's VM has a SATA disk and a virtio network adapter.
